@@ -73,5 +73,5 @@ func formatTime(t time.Time) string {
 }
 
 func init() {
-	rootCmd.AddCommand(propertiesCmd)
+	RootCmd.AddCommand(propertiesCmd)
 }

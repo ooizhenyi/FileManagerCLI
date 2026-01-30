@@ -1,6 +1,3 @@
-/*
-Copyright © 2025 NAME HERE <EMAIL ADDRESS>
-*/
 package cmd
 
 import (
@@ -9,7 +6,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var rootCmd = &cobra.Command{
+var RootCmd = &cobra.Command{
 	Use:   "filemanager",
 	Short: "A file management CLI application",
 	Long: `A file management CLI application that allows you to:
@@ -22,12 +19,12 @@ var rootCmd = &cobra.Command{
 }
 
 func Execute() {
-	err := rootCmd.Execute()
+	err := RootCmd.Execute()
 	if err != nil {
 		os.Exit(1)
 	}
 }
 
 func init() {
-	rootCmd.PersistentFlags().StringP("dir", "d", ".", "Directory to work with")
+	RootCmd.PersistentFlags().StringP("dir", "d", ".", "Directory to work with")
 }

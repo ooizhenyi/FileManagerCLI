@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"bufio"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -21,6 +22,7 @@ var searchCmd = &cobra.Command{
 		recursive, _ := cmd.Flags().GetBool("recursive")
 		fileType, _ := cmd.Flags().GetString("type")
 		caseSensitive, _ := cmd.Flags().GetBool("case-sensitive")
+		contentSearch, _ := cmd.Flags().GetBool("content")
 
 		if !caseSensitive {
 			searchTerm = strings.ToLower(searchTerm)
@@ -41,6 +43,43 @@ var searchCmd = &cobra.Command{
 				return nil
 			}
 
+			if contentSearch {
+				if info.IsDir() {
+					if !recursive && path != dir {
+						return filepath.SkipDir
+					}
+					return nil
+				}
+
+				file, err := os.Open(path)
+				if err != nil {
+					return nil
+				}
+				defer file.Close()
+
+				scanner := bufio.NewScanner(file)
+				lineNum := 0
+				foundInFile := false
+				for scanner.Scan() {
+					lineNum++
+					line := scanner.Text()
+					checkLine := line
+					if !caseSensitive {
+						checkLine = strings.ToLower(line)
+					}
+
+					if strings.Contains(checkLine, searchTerm) {
+						relativePath, _ := filepath.Rel(dir, path)
+						fmt.Fprintf(cmd.OutOrStdout(), "  [MATCH] %s:%d: %s\n", relativePath, lineNum, strings.TrimSpace(line))
+						matches++
+						foundInFile = true
+					}
+				}
+				if foundInFile {
+				}
+				return nil
+			}
+
 			name := info.Name()
 			if !caseSensitive {
 				name = strings.ToLower(name)
@@ -49,9 +88,9 @@ var searchCmd = &cobra.Command{
 			if strings.Contains(name, searchTerm) {
 				relativePath, _ := filepath.Rel(dir, path)
 				if info.IsDir() {
-					fmt.Printf("  [DIR] %s\n", relativePath)
+					fmt.Fprintf(cmd.OutOrStdout(), "  [DIR] %s\n", relativePath)
 				} else {
-					fmt.Printf("  [FILE] %s (%d bytes)\n", relativePath, info.Size())
+					fmt.Fprintf(cmd.OutOrStdout(), "  [FILE] %s (%d bytes)\n", relativePath, info.Size())
 				}
 				matches++
 			}
@@ -65,22 +104,23 @@ var searchCmd = &cobra.Command{
 
 		err := filepath.Walk(dir, searchFunc)
 		if err != nil {
-			fmt.Printf("Error during search: %v\n", err)
+			fmt.Fprintf(cmd.OutOrStdout(), "Error during search: %v\n", err)
 			return err
 		}
 
 		if matches == 0 {
-			fmt.Println("No matches found")
+			fmt.Fprintln(cmd.OutOrStdout(), "No matches found")
 		} else {
-			fmt.Printf("Found %d matches\n", matches)
+			fmt.Fprintf(cmd.OutOrStdout(), "Found %d matches\n", matches)
 		}
 		return nil
 	},
 }
 
 func init() {
-	rootCmd.AddCommand(searchCmd)
+	RootCmd.AddCommand(searchCmd)
 	searchCmd.Flags().BoolP("recursive", "r", false, "Search recursively")
 	searchCmd.Flags().StringP("type", "t", "all", "Type to search (all, files, folders)")
 	searchCmd.Flags().BoolP("case-sensitive", "c", false, "Use case-sensitive search")
+	searchCmd.Flags().Bool("content", false, "Search file content instead of filenames")
 }

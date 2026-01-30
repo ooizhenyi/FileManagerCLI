@@ -82,6 +82,6 @@ var copyCmd = &cobra.Command{
 }
 
 func init() {
-	rootCmd.AddCommand(copyCmd)
+	RootCmd.AddCommand(copyCmd)
 	copyCmd.Flags().BoolP("force", "f", false, "Force overwrite without confirmation")
 }

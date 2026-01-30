@@ -67,6 +67,6 @@ var compressCmd = &cobra.Command{
 }
 
 func init() {
-	rootCmd.AddCommand(compressCmd)
+	RootCmd.AddCommand(compressCmd)
 	compressCmd.Flags().BoolP("force", "f", false, "Force overwrite without confirmation")
 }

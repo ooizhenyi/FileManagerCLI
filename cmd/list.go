@@ -93,7 +93,7 @@ var listCmd = &cobra.Command{
 }
 
 func init() {
-	rootCmd.AddCommand(listCmd)
+	RootCmd.AddCommand(listCmd)
 	listCmd.Flags().StringP("type", "t", "all", "Type of entries to list (all, files, folders)")
 	listCmd.Flags().BoolP("detailed", "l", false, "Show detailed information")
 }

@@ -58,6 +58,6 @@ var extractCmd = &cobra.Command{
 }
 
 func init() {
-	rootCmd.AddCommand(extractCmd)
+	RootCmd.AddCommand(extractCmd)
 	extractCmd.Flags().BoolP("force", "f", false, "Force extraction without confirmation")
 }

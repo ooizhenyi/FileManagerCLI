@@ -22,7 +22,6 @@ var deleteCmd = &cobra.Command{
 		folderName := args[0]
 		fullPath := filepath.Join(dir, folderName)
 
-		//check folder exist or not
 		if _, err := os.Stat(fullPath); os.IsNotExist(err) {
 			fmt.Printf("Folder '%s' does not exists\n", folderName)
 			return err
@@ -39,5 +38,5 @@ var deleteCmd = &cobra.Command{
 }
 
 func init() {
-	rootCmd.AddCommand(deleteCmd)
+	RootCmd.AddCommand(deleteCmd)
 }

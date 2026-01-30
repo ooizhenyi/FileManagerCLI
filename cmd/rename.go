@@ -43,5 +43,5 @@ var editCmd = &cobra.Command{
 }
 
 func init() {
-	rootCmd.AddCommand(editCmd)
+	RootCmd.AddCommand(editCmd)
 }

@@ -8,8 +8,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-//To create file/folder -> mkdir
-
 var createCmd = &cobra.Command{
 	Use:     "cf [folderName]",
 	Short:   "To Create Folder/File",
@@ -24,7 +22,6 @@ var createCmd = &cobra.Command{
 		folderName := args[0]
 		fullPath := filepath.Join(dir, folderName)
 
-		//check whether folder exist in the current directory
 		if _, err := os.Stat(fullPath); err == nil {
 			fmt.Printf("Folder '%s' already exists\n", folderName)
 			return err
@@ -42,5 +39,5 @@ var createCmd = &cobra.Command{
 }
 
 func init() {
-	rootCmd.AddCommand(createCmd)
+	RootCmd.AddCommand(createCmd)
 }
