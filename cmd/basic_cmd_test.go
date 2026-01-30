@@ -2,7 +2,6 @@ package cmd_test
 
 import (
 	"bytes"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 
@@ -19,7 +18,7 @@ var _ = Describe("Basic Commands", func() {
 
 	BeforeEach(func() {
 		var err error
-		tempDir, err = ioutil.TempDir("", "basic-test")
+		tempDir, err = os.MkdirTemp("", "basic-test")
 		Expect(err).NotTo(HaveOccurred())
 
 		output = new(bytes.Buffer)
@@ -61,14 +60,14 @@ var _ = Describe("Basic Commands", func() {
 	Context("Copy Command", func() {
 		It("should copy a file", func() {
 			srcFile := filepath.Join(tempDir, "source.txt")
-			Expect(ioutil.WriteFile(srcFile, []byte("data"), 0644)).To(Succeed())
+			Expect(os.WriteFile(srcFile, []byte("data"), 0644)).To(Succeed())
 
 			cmd.RootCmd.SetArgs([]string{"copyfile", "source.txt", "dest.txt", "--dir", tempDir})
 			err := cmd.RootCmd.Execute()
 			Expect(err).NotTo(HaveOccurred())
 
 			destFile := filepath.Join(tempDir, "dest.txt")
-			content, err := ioutil.ReadFile(destFile)
+			content, err := os.ReadFile(destFile)
 			Expect(err).NotTo(HaveOccurred())
 			Expect(string(content)).To(Equal("data"))
 		})

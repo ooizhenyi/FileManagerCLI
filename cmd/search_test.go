@@ -2,7 +2,6 @@ package cmd_test
 
 import (
 	"bytes"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 
@@ -19,15 +18,15 @@ var _ = Describe("Search Command", func() {
 
 	BeforeEach(func() {
 		var err error
-		tempDir, err = ioutil.TempDir("", "search-test")
+		tempDir, err = os.MkdirTemp("", "search-test")
 		Expect(err).NotTo(HaveOccurred())
 
 		output = new(bytes.Buffer)
 		cmd.RootCmd.SetOut(output)
 
-		Expect(ioutil.WriteFile(filepath.Join(tempDir, "file1.txt"), []byte("Hello World"), 0644)).To(Succeed())
-		Expect(ioutil.WriteFile(filepath.Join(tempDir, "file2.txt"), []byte("Goodbye World"), 0644)).To(Succeed())
-		Expect(ioutil.WriteFile(filepath.Join(tempDir, "code.go"), []byte("func main() {}"), 0644)).To(Succeed())
+		Expect(os.WriteFile(filepath.Join(tempDir, "file1.txt"), []byte("Hello World"), 0644)).To(Succeed())
+		Expect(os.WriteFile(filepath.Join(tempDir, "file2.txt"), []byte("Goodbye World"), 0644)).To(Succeed())
+		Expect(os.WriteFile(filepath.Join(tempDir, "code.go"), []byte("func main() {}"), 0644)).To(Succeed())
 	})
 
 	AfterEach(func() {

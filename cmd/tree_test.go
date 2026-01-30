@@ -2,7 +2,6 @@ package cmd_test
 
 import (
 	"bytes"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 
@@ -19,7 +18,7 @@ var _ = Describe("Tree Command", func() {
 
 	BeforeEach(func() {
 		var err error
-		tempDir, err = ioutil.TempDir("", "tree-test")
+		tempDir, err = os.MkdirTemp("", "tree-test")
 		Expect(err).NotTo(HaveOccurred())
 
 		output = new(bytes.Buffer)
@@ -29,9 +28,9 @@ var _ = Describe("Tree Command", func() {
 		cmd.TreeCmd.Flags().Set("dirs-only", "false")
 
 		Expect(os.MkdirAll(filepath.Join(tempDir, "dir1", "subdir1"), 0755)).To(Succeed())
-		Expect(ioutil.WriteFile(filepath.Join(tempDir, "dir1", "file1.txt"), []byte("content"), 0644)).To(Succeed())
-		Expect(ioutil.WriteFile(filepath.Join(tempDir, "dir1", "subdir1", "file2.txt"), []byte("content"), 0644)).To(Succeed())
-		Expect(ioutil.WriteFile(filepath.Join(tempDir, "file3.txt"), []byte("content"), 0644)).To(Succeed())
+		Expect(os.WriteFile(filepath.Join(tempDir, "dir1", "file1.txt"), []byte("content"), 0644)).To(Succeed())
+		Expect(os.WriteFile(filepath.Join(tempDir, "dir1", "subdir1", "file2.txt"), []byte("content"), 0644)).To(Succeed())
+		Expect(os.WriteFile(filepath.Join(tempDir, "file3.txt"), []byte("content"), 0644)).To(Succeed())
 	})
 
 	AfterEach(func() {

@@ -2,7 +2,6 @@ package cmd_test
 
 import (
 	"bytes"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 
@@ -20,14 +19,14 @@ var _ = Describe("Hash Command", func() {
 
 	BeforeEach(func() {
 		var err error
-		tempDir, err = ioutil.TempDir("", "hash-test")
+		tempDir, err = os.MkdirTemp("", "hash-test")
 		Expect(err).NotTo(HaveOccurred())
 
 		output = new(bytes.Buffer)
 		cmd.RootCmd.SetOut(output)
 
 		testFile = filepath.Join(tempDir, "test.txt")
-		Expect(ioutil.WriteFile(testFile, []byte("hello"), 0644)).To(Succeed())
+		Expect(os.WriteFile(testFile, []byte("hello"), 0644)).To(Succeed())
 	})
 
 	AfterEach(func() {

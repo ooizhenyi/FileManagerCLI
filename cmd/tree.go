@@ -3,7 +3,6 @@ package cmd
 import (
 	"fmt"
 	"io"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 
@@ -49,12 +48,12 @@ func printTree(out io.Writer, path string, prefix string, currentDepth int, maxD
 		return nil
 	}
 
-	files, err := ioutil.ReadDir(path)
+	files, err := os.ReadDir(path)
 	if err != nil {
 		return err
 	}
 
-	var items []os.FileInfo
+	var items []os.DirEntry
 	for _, file := range files {
 		if dirsOnly && !file.IsDir() {
 			continue

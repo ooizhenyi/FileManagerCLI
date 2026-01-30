@@ -2,7 +2,7 @@ package ui
 
 import (
 	"fmt"
-	"io/ioutil"
+	"os"
 	"path/filepath"
 
 	"github.com/charmbracelet/bubbles/list"
@@ -37,7 +37,7 @@ func InitialModel(path string) model {
 }
 
 func getItems(path string) []list.Item {
-	files, err := ioutil.ReadDir(path)
+	files, err := os.ReadDir(path)
 	if err != nil {
 		return []list.Item{}
 	}
@@ -52,7 +52,8 @@ func getItems(path string) []list.Item {
 		if file.IsDir() {
 			desc = "Directory"
 		} else {
-			desc = fmt.Sprintf("%d bytes", file.Size())
+			info, _ := file.Info()
+			desc = fmt.Sprintf("%d bytes", info.Size())
 		}
 		items = append(items, item{
 			name:  file.Name(),
